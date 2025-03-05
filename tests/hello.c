@@ -1,4 +1,3 @@
-#include "../craft.h"
 #include <stdio.h>
 
 int main(void)
