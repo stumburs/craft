@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -23,7 +24,8 @@
 #include <fcntl.h>
 #endif
 
-bool craft_mkdir_if_doesnt_exist(const char *path);
+bool craft_mkdir_if_doesnt_exist(const char *path); // Creates a directory if it doesn't exist.
+bool craft_run_cmd(const char *cmd);                // NOTE: Will be changed in the future.
 
 #ifdef CRAFT_IMPLEMENTATION
 
@@ -47,6 +49,21 @@ bool craft_mkdir_if_doesnt_exist(const char *path)
 
     printf("Created directory `%s`\n", path);
     return true;
+}
+
+bool craft_run_cmd(const char *cmd)
+{
+    int result = system(cmd);
+    if (result == 0)
+    {
+        printf("Command `%s` executed successfully\n", cmd);
+        return true;
+    }
+    else
+    {
+        printf("Command execution failed\n");
+        return false;
+    }
 }
 
 #endif // CRAFT_IMPLEMENTATION
