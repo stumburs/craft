@@ -43,15 +43,19 @@
 typedef enum
 {
     CRAFT_INFO,
+    CRAFT_SUCCESS,
     CRAFT_WARNING,
     CRAFT_ERROR,
 } CraftLogLevel;
 
 void craft_log(CraftLogLevel log_level, const char *msg, ...);
 
-bool craft_mkdir_if_doesnt_exist(const char *path); // Creates a directory if it doesn't exist.
-bool craft_run_cmd(const char *cmd);                // NOTE: Will be changed in the future.
-bool craft_copy_file(const char *src_path, const char *dst_path);
+bool craft_mkdir_if_doesnt_exist(const char *path);                    // Creates a directory if it doesn't exist.
+bool craft_run_cmd(const char *cmd);                                   // NOTE: Will be changed in the future.
+bool craft_copy_file(const char *src_path, const char *dst_path);      // Copies file.
+bool craft_delete_file(const char *file_path);                         // Deletes file.
+bool craft_copy_directory(const char *src_path, const char *dst_path); // Copies entire directory.
+bool craft_delete_directory(const char *path);
 
 #ifdef CRAFT_IMPLEMENTATION
 
@@ -60,6 +64,9 @@ void craft_log(CraftLogLevel log_level, const char *msg, ...)
     switch (log_level)
     {
     case CRAFT_INFO:
+        fprintf(stderr, "[INFO] ");
+        break;
+    case CRAFT_SUCCESS:
         fprintf(stderr, CRAFT_COLOR_GREEN "[INFO] ");
         break;
     case CRAFT_WARNING:
@@ -92,10 +99,10 @@ bool craft_mkdir_if_doesnt_exist(const char *path)
     {
         if (errno == EEXIST)
         {
-            printf("Directory `%s` already exists\n", path);
+            craft_log(CRAFT_INFO, "Directory `%s` already exists", path);
             return true;
         }
-        printf("Could not create directory `%s`: %s\n", path, strerror(errno));
+        craft_log(CRAFT_ERROR, "Could not create directory `%s`: %s", path, strerror(errno));
         return false;
     }
 
@@ -108,14 +115,58 @@ bool craft_run_cmd(const char *cmd)
     int result = system(cmd);
     if (result == 0)
     {
-        printf("Command `%s` executed successfully\n", cmd);
+        craft_log(CRAFT_INFO, "Command `%s` executed successfully", cmd);
         return true;
     }
     else
     {
-        printf("Command execution failed\n");
+        craft_log(CRAFT_ERROR, "Command `%s` failed to execute", cmd);
         return false;
     }
+}
+
+bool craft_delete_file(const char *file_path)
+{
+    craft_log(CRAFT_INFO, "deleting %s", file_path);
+
+    if (remove(file_path) < 0)
+    {
+        craft_log(CRAFT_ERROR, "Failed to delete file %s: %s", file_path, strerror(errno));
+        return false;
+    }
+    return true;
+}
+
+bool craft_copy_directory(const char *src_path, const char *dst_path)
+{
+    // TODO: Use custom solution.
+    craft_log(CRAFT_INFO, "Copying %s to %s", src_path, dst_path);
+
+    char cmd[1024];
+    snprintf(cmd, sizeof(cmd), "cp -r %s %s", src_path, dst_path);
+
+    if (system(cmd) < 0)
+    {
+        craft_log(CRAFT_ERROR, "Failed to copy directory %s to %s: %s", src_path, dst_path, strerror(errno));
+        return false;
+    }
+    return true;
+}
+
+bool craft_delete_directory(const char *path)
+{
+    // TODO: Use custom solution.
+    craft_log(CRAFT_INFO, "Deleting %s", path);
+
+    char cmd[1024];
+    snprintf(cmd, sizeof(cmd), "rm -r %s", path);
+
+    if (system(cmd) < 0)
+    {
+        craft_log(CRAFT_ERROR, "Failed to delete directory %s: %s", path, strerror(errno));
+        return false;
+    }
+    return true;
 }
 
 #endif // CRAFT_IMPLEMENTATION
