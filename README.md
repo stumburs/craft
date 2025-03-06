@@ -2,6 +2,9 @@
 
 craft is a simple C header-only library used for writing build recipes in C itself. This library is heavily inspired by [tsoding/nob.h](https://github.com/tsoding/nob.h).
 
+> [!NOTE]
+> At the moment only Linux is supported.
+
 ## Features
 
 - Whatever I needed
