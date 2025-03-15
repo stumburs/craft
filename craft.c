@@ -2,7 +2,7 @@
 #include "craft.h"
 
 // Create a dynamic array of a custom type
-define_array(IntArray, int);
+craft_array_define(IntArray, int);
 
 int main(void)
 {

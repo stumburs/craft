@@ -47,12 +47,12 @@
 #define craft_array_free(arr) free((arr).items)
 
 // Might cause some IDEs to complain about missing definition.
-#define define_array(name, type) \
-    typedef struct name##_t      \
-    {                            \
-        type *items;             \
-        size_t count;            \
-        size_t capacity;         \
+#define craft_array_define(name, type) \
+    typedef struct name##_t            \
+    {                                  \
+        type *items;                   \
+        size_t count;                  \
+        size_t capacity;               \
     } name;
 
 // Dynamic arrays
