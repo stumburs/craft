@@ -44,7 +44,16 @@
         (arr)->count += (new_items_count);                                                           \
     } while (0)
 
-#define craft_array_free(arr) free((arr)->items)
+#define craft_array_free(arr) free((arr).items)
+
+// Might cause some IDEs to complain about missing definition.
+#define define_array(name, type) \
+    typedef struct name##_t      \
+    {                            \
+        type *items;             \
+        size_t count;            \
+        size_t capacity;         \
+    } name;
 
 // Dynamic arrays
 typedef struct
