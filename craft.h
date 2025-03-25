@@ -1,3 +1,15 @@
+//
+// craft - https://github.com/stumburs/craft
+//
+// craft.h is a simple build system written entirely in C, for use with C and C++.
+// This library is heavily inspired by https://github.com/tsoding/nob.h
+// craft.h was created as a learning experience and as a personal tool to be used in projects.
+// Do not expect for this library to meet all your needs.
+//
+// At the moment (and likely forever) it only supports Linux.
+// Thanks for checking it out!
+//
+
 #ifndef CRAFT_H
 #define CRAFT_H
 
